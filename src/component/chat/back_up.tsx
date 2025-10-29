@@ -282,7 +282,7 @@ export default function ChatWidget() {
           elevation={8}
           sx={{
             width: 320,
-            height: 820,
+            height: 520,
             mb: 2,
             borderRadius: 3,
             display: "flex",
