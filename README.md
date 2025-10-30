@@ -1,49 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## AI Agent (Doctor/Caregiver Appointment Assistant)
 
-## Getting Started
+Helps users chat with an AI assistant to book appointments with doctors or caregivers.
 
+### Tech Stack
+- **Next.js**: 16
+- **React**: 19
+- **TypeScript**: 5
+- **MUI (Material UI)**: 7 (+ Emotion)
+- **Tailwind CSS**: 4
+- **Google Generative AI**: `@google/genai`
 
-#Core_Feature 
--Assist user for make booking appointment
+### Prerequisites
+- **Node.js**: 20.x LTS (recommended) or newer
+- **npm**: 10+ (bundled with Node 20)
+- macOS, Linux, or Windows
 
+### Project Structure
+- App directory: `src/app`
+- Chat components: `src/component/chat`
+- API route: `src/app/api/appointment/route.js`
 
-
-
-First, run the development server:
-
+### 1) Clone and Install
 ```bash
-npm i 
-
-npm install @google/genai
-
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd ai-agent
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+No need to manually install `@google/genai` — it is already listed in dependencies.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2) Environment Variables
+Create a `.env.local` file in `ai-agent/` with your Google Gemini API key:
+```bash
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Notes:
+- The key is used on the client by `@google/genai` in `src/component/chat/ai_agent.tsx`.
+- Keys prefixed with `NEXT_PUBLIC_` are exposed to the browser; use a non-public key only if you proxy requests via a server.
 
-## Learn More
+### 3) Run the App
+```bash
+npm run dev
+```
+Open `http://localhost:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+Build and start (production):
+```bash
+npm run build
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4) Using the Chatbot
+- The floating chat widget is rendered by `src/component/chat/back_up.tsx` and used on `src/app/page.tsx` and `src/app/agent/page.tsx`.
+- The assistant streams responses from the Gemini model specified in code (`gemini-2.5-flash`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### API Endpoints (Local)
+- `GET /api/appointment` → health check, returns a hello message
+- `POST /api/appointment` → accepts JSON and returns a dummy "Booked" message
 
-## Deploy on Vercel
+Example `POST` body (the chat component internally calls booking via `Book()`):
+```json
+{
+  "patient_name": "John Doe",
+  "doctor_name": "Dr. Jesse",
+  "book_date": "2025-11-03T07:00:00Z"
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Troubleshooting
+- Ensure Node 20+ is installed: `node -v`
+- Verify your `.env.local` exists and the key is valid.
+- If you change environment variables, restart `npm run dev`.
+- If MUI styles look off, confirm `@emotion/react` and `@emotion/styled` are installed (they are in `package.json`).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Next_AI_ChatBot
+### Where to Customize
+- System instruction for the assistant: `src/component/chat/system_instruction.ts` (pulls mock doctor/slots from `src/fetch_data/fetch_slot.ts`).
+- Chat UI and model config: `src/component/chat/ai_agent.tsx`.
+- Home page integration: `src/app/page.tsx`.
+- Agent page: `src/app/agent/page.tsx`.
 
+### Scripts
+- `npm run dev` — start development server
+- `npm run build` — build for production
+- `npm start` — run production build
