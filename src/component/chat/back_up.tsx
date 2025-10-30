@@ -29,7 +29,7 @@ import Slot from "@/fetch_data/fetch_slot";
 // The hardcoded key below is for demonstration only and should be replaced.
 const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY
 
-console.log("✅ Gemini Key:", process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+// console.log("✅ Gemini Key:", process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 // --- Types & Declarations ---
 
 interface BookAppointmentArgs {
@@ -70,10 +70,10 @@ const bookAppointmentDeclaration: FunctionDeclaration = {
 
 const executeBookAppointment = (args: BookAppointmentArgs) => {
     // 1. Log to console and show alert (the "mini method" requested)
-    console.log("--- 🚨 APPOINTMENT BOOKING TRIGGERED 🚨 ---");
-    console.log(`✅ Appointment Confirmed for ${args.patientName}`);
-    console.log(`👤 Doctor: ${args.doctorName}`);
-    console.log(`⏰ Time: ${args.appointmentTime}`);
+    // console.log("--- 🚨 APPOINTMENT BOOKING TRIGGERED 🚨 ---");
+    // console.log(`✅ Appointment Confirmed for ${args.patientName}`);
+    // console.log(`👤 Doctor: ${args.doctorName}`);
+    // console.log(`⏰ Time: ${args.appointmentTime}`);
     // alert(`Appointment Confirmed for ${args.patientName} with Dr. ${args.doctorName} at ${args.appointmentTime}! (Check console)`);
     
     // 2. Call your external method (Assuming 'Book' is imported correctly)
@@ -111,7 +111,7 @@ export default function ChatWidget() {
     loadInstruction();
   }, []);
 
-  console.log("Whole---Instructions: ", instruction)
+  // console.log("Whole---Instructions: ", instruction)
   // Ref and function for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -175,7 +175,7 @@ export default function ChatWidget() {
             const functionCall: FunctionCall = response.functionCalls[0];
             const { name, args } = functionCall;
 
-            console.log(`Model requested to call function: ${name}`);
+            // console.log(`Model requested to call function: ${name}`);
 
             let functionResult: any;
             
