@@ -94,7 +94,7 @@ export default function ChatHead() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   const [chatHistory, setChatHistory] = useState<Message[]>([
-    { role: "assistant", text: "👋 Hello! I am Mindstride Assistant, how can i help you today?" },
+    { role: "assistant", text: "👋 Hello! I am Martha, how can i help you today?" },
   ]);
 
 
@@ -175,10 +175,8 @@ export default function ChatHead() {
             const functionCall: FunctionCall = response.functionCalls[0];
             const { name, args } = functionCall;
 
-            // console.log(`Model requested to call function: ${name}`);
-
+            // console.log(`Model requested to call function: ${name}`)
             let functionResult: any;
-            
             // Execute the function locally (our booking method)
             if (name === 'bookAppointment') {
                 // Safely parse and validate args which may be an object or a JSON string
