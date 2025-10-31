@@ -39,8 +39,8 @@ interface BookAppointmentArgs {
 }
 
 interface Message {
-    role: 'user' | 'assistant' | 'error';
-    text: string;
+  role: 'user' | 'assistant' | 'error';
+  text: string;
 }
 
 const bookAppointmentDeclaration: FunctionDeclaration = {
@@ -94,7 +94,7 @@ export default function ChatWidget() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   const [chatHistory, setChatHistory] = useState<Message[]>([
-    { role: "assistant", text: "👋 Hello! I am Mindstride Assistant, how can i help you today?" },
+    { role: "assistant", text: "👋 Hello! I am Martha, how can i help you today?" },
   ]);
 
 
@@ -213,10 +213,33 @@ export default function ChatWidget() {
                     functionResult = executeBookAppointment(typedArgs);
                     
                     // Call external booking function (if needed, ensure it's handled asynchronously if necessary)
-                    try {
-                      await Book(typedArgs.patientName, typedArgs.doctorName, typedArgs.appointmentTime);
-                    } catch (err) {
-                      console.error('External Book call failed:', err);
+                   try {
+                      // 1. Call your external async booking function
+                      // This is where the code execution pauses until the promise resolves/rejects
+                      await Book(patientName, doctorName, appointmentTime);
+
+                      // 2. If it succeeds, set the SUCCESSFUL functionResult for Gemini
+                      functionResult = { 
+                          status: "Success", 
+                          message: `Appointment confirmed for ${patientName} with Dr. ${doctorName} at ${appointmentTime}. The external booking system reported success.` 
+                      };
+                      
+                      // 3. Optional: Trigger your console.log/alert only upon SUCCESS
+                      console.log("--- ✅ APPOINTMENT BOOKING SUCCESSFUL ✅ ---");
+                      alert(`Appointment Confirmed for ${patientName} with Dr. ${doctorName} at ${appointmentTime}!`);
+
+                    } catch (err: any) {
+                      // 4. If it fails, set a DETAILED ERROR functionResult for Gemini
+                      // The error message here is what Gemini will use to talk to the user.
+                      const errorMessage = err.message || 'Unknown server error during booking.';
+                      console.error('External Book call failed:', errorMessage);
+                      functionResult = { 
+                          status: 'Error', 
+                          message: `The external booking system failed. Reason: ${errorMessage}. Please check system status or try a different slot.` 
+                      };
+                      
+                      // 5. Optional: Trigger your alert/console.log only upon FAILURE
+                      alert(`Booking Failed: ${errorMessage}`);
                     }
                   }
                 }
@@ -302,7 +325,7 @@ export default function ChatWidget() {
               p: 1.5,
             }}
           >
-            <Typography fontWeight={600} variant="subtitle1">AI Assistant</Typography>
+            <Typography fontWeight={600} variant="subtitle1">Martha Assistant</Typography>
             <IconButton color="inherit" size="small" onClick={() => setOpen(false)}>
               <CloseIcon />
             </IconButton>
