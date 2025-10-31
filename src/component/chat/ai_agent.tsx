@@ -300,7 +300,7 @@ export default function ChatHead() {
               p: 1.5,
             }}
           >
-            <Typography fontWeight={600} variant="subtitle1">AI Assistant</Typography>
+            <Typography fontWeight={600} variant="subtitle1">Martha Assistant</Typography>
             <IconButton color="inherit" size="small" onClick={() => setOpen(false)}>
               <CloseIcon />
             </IconButton>
