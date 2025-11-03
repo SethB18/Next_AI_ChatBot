@@ -90,6 +90,8 @@ const getSystemInstruction = async (): Promise<string> => {
                
             9. **STEP 9: BOOKING EXECUTION**
                After explicit confirmation (**only** if the user selects 'Yes'), call the 'bookAppointment' tool.
+            10. **Reminder:**
+                Only BOOK after you get confirmation from user if dont keep gathering information.
             
             Note when sent parameter doctor_name make sure it has no space (e.g Dr. Jame to Dr.Jame).
             Do not answer general medical questions or provide diagnoses once user get out of your main duty drag patient back to our system.
