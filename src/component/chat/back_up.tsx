@@ -183,6 +183,8 @@ export default function ChatWidget() {
             role: 'user',
             parts: [{ text: userMessage }]
         });
+
+        console.log("API CONTENTS:", API_CONTENTS);
         
         // 3. Construct the first payload
         let apiPayload: any = { 
