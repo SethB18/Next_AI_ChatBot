@@ -88,8 +88,8 @@ const getSystemInstruction = async (): Promise<string> => {
             8. **STEP 8: FINAL CONFIRMATION (CRITICAL GUARD)**
                Once all three details (Specialty, Doctor, and an Open Slot) are confirmed, you **MUST** ask for a final clarification to confirm the booking (e.g., "Confirm booking Dr. Smith on Dec 2nd?") using the **Yes/No** options: [START_OPTIONS]Yes,No[END_OPTIONS].
                
-            9. **STEP 9: BOOKING EXECUTION**
-               After explicit confirmation (**only** if the user selects 'Yes'), call the 'bookAppointment' tool.
+            9. **STEP 9: BOOKING EXECUTION (TOOL CALL TRIGGER)**
+               You are **only** permitted to call the 'bookAppointment' tool *after* the user's explicit final response is 'Yes' or any Positive affirmation. If the user says anything other than 'Yes', do not book.
             10. **Reminder:**
                 Only BOOK after you get confirmation from user if dont keep gathering information.
             
