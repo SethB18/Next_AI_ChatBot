@@ -81,7 +81,7 @@ export default function ChatWidget() {
   const [open, setOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
+
   // State for interactive buttons
   const [interactiveOptions, setInteractiveOptions] = useState<string[] | null>(null);
   
@@ -108,6 +108,14 @@ export default function ChatWidget() {
 
   // Ref and function for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+  if (!isLoading) {
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
+  }
+}, [isLoading]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -139,6 +147,7 @@ export default function ChatWidget() {
   };
 
 
+  const inputRef = useRef<HTMLInputElement>(null);
   // Main message sending and function call handling logic
   const handleSend = async (e?: FormEvent, messageOverride?: string) => {
     e?.preventDefault(); 
@@ -340,7 +349,9 @@ export default function ChatWidget() {
         setChatHistory((prev) => [...prev, { role: "error", text: "Oops! Could not connect to the AI service. Please check the console for details." }]);
     } finally {
       setIsLoading(false); // Stop loading
+      inputRef.current?.focus();
     }
+    
   };
   
   // Allows sending message by pressing Enter key
@@ -480,6 +491,7 @@ export default function ChatWidget() {
           {/* Input */}
           <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
             <TextField
+              inputRef={inputRef}
               variant="outlined"
               size="small"
               fullWidth
@@ -505,7 +517,7 @@ export default function ChatWidget() {
       <IconButton
         color="primary"
         sx={{
-          bgcolor: "#749ef9ff",
+          bgcolor: "#a1adffff",
           color: "white",
           "&:hover": { bgcolor: "#1D4ED8" },
           boxShadow: 4,
@@ -517,7 +529,7 @@ export default function ChatWidget() {
       >
         <Box
             component="img"
-            src="/icons/mobileLogo.png" 
+            src="/icons/mindStride_AI_logo.png" 
             alt="Chat"
             sx={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "50%"}}
         />

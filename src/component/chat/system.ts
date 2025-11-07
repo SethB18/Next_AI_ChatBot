@@ -16,31 +16,31 @@ const all_doctor:any = {
 
 "Dr. Smith": [
 
-"2025-11-04 10:00 AM", // Original
+    "2025-11-04 10:00 AM",
 
-"2025-11-04 11:30 AM",
+    "2025-11-04 11:30 AM",
 
-"2025-11-05 09:00 AM",
+    "2025-11-05 09:00 AM",
 
-"2025-11-05 01:00 PM",
+    "2025-11-05 01:00 PM",
 
-"2025-11-06 10:30 AM",
+    "2025-11-06 10:30 AM",
 
-"2025-11-06 03:00 PM",
+    "2025-11-06 03:00 PM",
 
-"2025-11-07 09:30 AM",
+    "2025-11-07 09:30 AM",
 
-"2025-11-07 02:00 PM",
+    "2025-11-07 02:00 PM",
 
-"2025-11-10 10:00 AM",
+    "2025-11-10 10:00 AM",
 
-"2025-11-10 02:30 PM",
+    "2025-11-10 02:30 PM",
 
-"2025-11-11 09:00 AM",
+    "2025-11-11 09:00 AM",
 
-"2025-11-12 11:00 AM",
+    "2025-11-12 11:00 AM",
 
-"2025-11-13 01:30 PM"
+    "2025-11-13 01:30 PM"
 
 ],
 
@@ -49,25 +49,25 @@ const all_doctor:any = {
 
 "Dr. Jones": [
 
-"2025-11-04 10:00 AM", // Original
+    "2025-11-04 10:00 AM",
 
-"2025-11-04 02:00 PM",
+    "2025-11-04 02:00 PM",
 
-"2025-11-05 10:00 AM",
+    "2025-11-05 10:00 AM",
 
-"2025-11-05 04:00 PM",
+    "2025-11-05 04:00 PM",
 
-"2025-11-07 11:00 AM",
+    "2025-11-07 11:00 AM",
 
-"2025-11-10 09:00 AM",
+    "2025-11-10 09:00 AM",
 
-"2025-11-11 01:00 PM",
+    "2025-11-11 01:00 PM",
 
-"2025-11-12 10:30 AM",
+    "2025-11-12 10:30 AM",
 
-"2025-11-14 02:00 PM",
+    "2025-11-14 02:00 PM",
 
-"2025-11-17 09:30 AM"
+    "2025-11-17 09:30 AM"
 
 ],
 
@@ -75,7 +75,6 @@ const all_doctor:any = {
 // Dr. Sisko (General Medicine) - 0 Slots (Keeping slots for Dr. Jimmy only for this specialty for variety)
 
 "Dr. Sisko": [
-
 
 ],
 
@@ -85,21 +84,21 @@ const all_doctor:any = {
 
 "Dr. Jimmy": [
 
-"2025-11-04 10:00 AM", // Original
+    "2025-11-04 10:00 AM",
 
-"2025-11-05 08:00 AM",
+    "2025-11-05 08:00 AM",
 
-"2025-11-06 11:00 AM",
+    "2025-11-06 11:00 AM",
 
-"2025-11-07 03:00 PM",
+    "2025-11-07 03:00 PM",
 
-"2025-11-10 09:30 AM",
+    "2025-11-10 09:30 AM",
 
-"2025-11-11 01:30 PM",
+    "2025-11-11 01:30 PM",
 
-"2025-11-12 10:00 AM",
+    "2025-11-12 10:00 AM",
 
-"2025-11-13 04:00 PM"
+    "2025-11-13 04:00 PM"
 
 ],
 
@@ -108,19 +107,19 @@ const all_doctor:any = {
 
 "Dr. Brown": [
 
-"2025-11-04 09:00 AM",
+    "2025-11-04 09:00 AM",
 
-"2025-11-05 11:00 AM",
+    "2025-11-05 11:00 AM",
 
-"2025-11-06 01:00 PM",
+    "2025-11-06 01:00 PM",
 
-"2025-11-10 11:00 AM",
+    "2025-11-10 11:00 AM",
 
-"2025-11-12 09:30 AM",
+    "2025-11-12 09:30 AM",
 
-"2025-11-13 02:00 PM",
+    "2025-11-13 02:00 PM",
 
-"2025-11-14 10:00 AM"
+    "2025-11-14 10:00 AM"
 
 ]
 
@@ -138,6 +137,11 @@ const getSystemInstruction = async (): Promise<string> => {
             ***
             SYSTEM DATA: AVAILABLE DOCTORS AND OPEN SLOTS
             ***
+
+            Current Date: ${current_date.toISOString().split('T')[0]} - ${current_date.toLocaleTimeString()}
+            
+            ***
+
             ${extract_doctors}
 
             patient_name = RealWat
@@ -174,10 +178,15 @@ const getSystemInstruction = async (): Promise<string> => {
                **Initial Action:** List the **ACTIVE_SPECIALTIES** using the [START_OPTIONS] marker.
 
             **B. SELECT DOCTOR:**
-               Once the Specialty is selected, list the corresponding doctors in that specialty using the [START_OPTIONS] marker.
+               Once the Specialty is provided:
+               * **If the Specialty is INVALID** (not in 'ACTIVE\_SPECIALTIES'), politely inform the user and re-list the **ACTIVE\_SPECIALTIES** using the [START\_OPTIONS] marker.
+               * **If the Specialty is VALID**, list the corresponding doctors in that specialty using the [START_OPTIONS] marker.
 
             **C. SELECT SLOT:**
-               Once the Doctor is selected, you **MUST** list their **OPEN_SLOTS** from the SYSTEM DATA using the [START_OPTIONS] marker.
+               Once the Doctor's Name is provided:
+               * **If the Doctor is INVALID** (not a doctor in the current specialty), politely inform the user and re-list the **doctors for that specialty** using the [START\_OPTIONS] marker.
+               * **If the Doctor is VALID**, you **MUST** list their **OPEN_SLOTS** from the SYSTEM DATA using the [START_OPTIONS] marker.
+               * **Do not List Open Slot That have passed the current date**.
 
             **D. CHECK SLOT & CONFIRMATION SETUP:**
                Once the user selects a date/time:
