@@ -1,132 +1,125 @@
 import React from "react";
+import Slot from "@/fetch_data/fetch_slot";
 
-const all_doctor:any = {
 
-"Cardiology": ["Dr. Smith", "Dr. Jones"],
+// const all_doctor:any = {
 
-"General Medicine": ["Dr. Sisko", "Dr. Jimmy"],
+// "Cardiology": ["Dr. Smith", "Dr. Jones"],
 
-"Neurology": ["Dr. Brown"],
+// "General Medicine": ["Dr. Sisko", "Dr. Jimmy"],
 
-"ACTIVE_SPECIALTIES": ["Cardiology", "Neurology","General Medicine"],
+// "Neurology": ["Dr. Brown"],
 
-"OPEN_SLOTS": {
+// "ACTIVE_SPECIALTIES": ["Cardiology", "Neurology","General Medicine"],
 
-// Dr. Smith (Cardiology) - 13 Slots
+// "OPEN_SLOTS": {
 
-"Dr. Smith": [
 
-    "2025-11-04 10:00 AM",
+// "Dr.Smith": [
 
-    "2025-11-04 11:30 AM",
+//     "2025-11-04 10:00 AM",
 
-    "2025-11-05 09:00 AM",
+//     "2025-11-04 11:30 AM",
 
-    "2025-11-05 01:00 PM",
+//     "2025-11-05 09:00 AM",
 
-    "2025-11-06 10:30 AM",
+//     "2025-11-05 01:00 PM",
 
-    "2025-11-06 03:00 PM",
+//     "2025-11-06 10:30 AM",
 
-    "2025-11-07 09:30 AM",
+//     "2025-11-06 03:00 PM",
 
-    "2025-11-07 02:00 PM",
+//     "2025-11-07 09:30 AM",
 
-    "2025-11-10 10:00 AM",
+//     "2025-11-07 02:00 PM",
 
-    "2025-11-10 02:30 PM",
+//     "2025-11-10 10:00 AM",
 
-    "2025-11-11 09:00 AM",
+//     "2025-11-10 02:30 PM",
 
-    "2025-11-12 11:00 AM",
+//     "2025-11-11 09:00 AM",
 
-    "2025-11-13 01:30 PM"
+//     "2025-11-12 11:00 AM",
 
-],
+//     "2025-11-13 01:30 PM"
 
+// ],
 
-// Dr. Jones (Cardiology) - 10 Slots
 
-"Dr. Jones": [
+// "Dr.Jone": [
 
-    "2025-11-04 10:00 AM",
+//     "2025-11-04 10:00 AM",
 
-    "2025-11-04 02:00 PM",
+//     "2025-11-04 02:00 PM",
 
-    "2025-11-05 10:00 AM",
+//     "2025-11-05 10:00 AM",
 
-    "2025-11-05 04:00 PM",
+//     "2025-11-05 04:00 PM",
 
-    "2025-11-07 11:00 AM",
+//     "2025-11-07 11:00 AM",
 
-    "2025-11-10 09:00 AM",
+//     "2025-11-10 09:00 AM",
 
-    "2025-11-11 01:00 PM",
+//     "2025-11-11 01:00 PM",
 
-    "2025-11-12 10:30 AM",
+//     "2025-11-12 10:30 AM",
 
-    "2025-11-14 02:00 PM",
+//     "2025-11-14 02:00 PM",
 
-    "2025-11-17 09:30 AM"
+//     "2025-11-17 09:30 AM"
 
-],
+// ],
 
 
-// Dr. Sisko (General Medicine) - 0 Slots (Keeping slots for Dr. Jimmy only for this specialty for variety)
+// "Dr.Sisko": [
 
-"Dr. Sisko": [
+// ],
 
-],
 
+// "Dr.Jimmy": [
 
+//     "2025-11-04 10:00 AM",
 
-// Dr. Jimmy (General Medicine) - 8 Slots
+//     "2025-11-05 08:00 AM",
 
-"Dr. Jimmy": [
+//     "2025-11-06 11:00 AM",
 
-    "2025-11-04 10:00 AM",
+//     "2025-11-07 03:00 PM",
 
-    "2025-11-05 08:00 AM",
+//     "2025-11-10 09:30 AM",
 
-    "2025-11-06 11:00 AM",
+//     "2025-11-11 01:30 PM",
 
-    "2025-11-07 03:00 PM",
+//     "2025-11-12 10:00 AM",
 
-    "2025-11-10 09:30 AM",
+//     "2025-11-13 04:00 PM"
 
-    "2025-11-11 01:30 PM",
+// ],
 
-    "2025-11-12 10:00 AM",
 
-    "2025-11-13 04:00 PM"
+// "Dr.Brown": [
 
-],
+//     "2025-11-04 09:00 AM",
 
+//     "2025-11-05 11:00 AM",
 
-// Dr. Brown (Neurology) - 7 Slots
+//     "2025-11-06 01:00 PM",
 
-"Dr. Brown": [
+//     "2025-11-10 11:00 AM",
 
-    "2025-11-04 09:00 AM",
+//     "2025-11-12 09:30 AM",
 
-    "2025-11-05 11:00 AM",
+//     "2025-11-13 02:00 PM",
 
-    "2025-11-06 01:00 PM",
+//     "2025-11-14 10:00 AM"
 
-    "2025-11-10 11:00 AM",
+// ]
 
-    "2025-11-12 09:30 AM",
+// }
 
-    "2025-11-13 02:00 PM",
+// };
 
-    "2025-11-14 10:00 AM"
-
-]
-
-}
-
-};
-
+const all_doctor:any = Slot();
 let current_date = new Date();
 
 
@@ -135,16 +128,16 @@ const extract_doctors = JSON.stringify(all_doctor)
 const getSystemInstruction = async (): Promise<string> => {
     return `
             ***
-            SYSTEM DATA: AVAILABLE DOCTORS AND OPEN SLOTS
+            SYSTEM DATA: AVAILABILITY & PATIENT
             ***
 
-            Current Date: ${current_date.toISOString().split('T')[0]} - ${current_date.toLocaleTimeString()}
+            Current Date/Time: {current_date.strftime('%Y-%m-%d %H:%M:%S')}
+            patient_name = {patient_name}
             
             ***
-
+            AVAILABLE DATA:
             ${extract_doctors}
-
-            patient_name = RealWat
+            
             ***
             END OF SYSTEM DATA
             ***
@@ -153,57 +146,49 @@ const getSystemInstruction = async (): Promise<string> => {
             PRIMARY INSTRUCTIONS: MARTHA APPOINTMENT ASSISTANT (STATE-MACHINE & INTERACTIVE MODE)
             ***
 
-            You are **'Martha Assistant'**, a friendly, professional, and concise AI dedicated to booking doctor appointments for **${all_doctor.patient_name || "RealWat"}**.
+            You are **'Martha Assistant'**, a friendly, professional AI dedicated to booking appointments for **"{patient_name}"**.
 
-            **CORE RULE:** The provided JSON contains all availability data. **'OPEN_SLOTS' are the ONLY AVAILABLE times and must be used for booking.**
-
-            ---
-            ### 1. Booking State (Required Data Points)
-            Guide the user through collecting these three mandatory pieces of information in order:
-            1.  **Specialty** (Must match one from 'ACTIVE_SPECIALTIES').
-            2.  **Doctor's Name** (Must be a valid doctor under the selected Specialty).
-            3.  **Specific Slot** (A date/time that **IS** listed in 'OPEN_SLOTS' for the selected doctor).
-                *Once a Doctor is selected, you **MUST** list their **OPEN_SLOTS** using the [START_OPTIONS] marker.*
+            **CORE RULE:** **'OPEN_SLOTS' are the ONLY AVAILABLE times and must be used for booking.**
 
             ---
-            ### 2. UI Interaction & Formatting Rule (MUST Use)
-            When you present a list of options (for Specialty, Doctor, or Confirmation), you **MUST** format your response with the exact markers:
+            ### 1. UI Interaction & Formatting Rule (ABSOLUTELY MUST FOLLOW)
+            **STRICTLY ADHERE:** When listing any options (Specialty, Doctor, Slot, Confirmation), you **MUST** format your response with the exact markers:
             **[START_OPTIONS]Item 1,Item 2,Item 3[END_OPTIONS]**
             *Always include a short, polite introductory phrase immediately before the [START_OPTIONS] marker.*
 
             ---
-            ### 3. Conversation Flow & State Transitions
+            ### 2. Booking State Flow
+            Guide the user through collecting these three mandatory steps in order:
+            1.  **Specialty** (Must match 'ACTIVE_SPECIALTIES').
+            2.  **Doctor's Name** (Must be valid in the selected Specialty).
+            3.  **Specific Slot** (Must be in 'OPEN_SLOTS' and not in the past).
+
+            ---
+            ### 3. Conversation & Transition Logic
+
             **A. START:**
-               Greet the user (e.g., "Hello, I'm Martha...") and immediately state your purpose (booking appointments).
-               **Initial Action:** List the **ACTIVE_SPECIALTIES** using the [START_OPTIONS] marker.
+               Greet the user, state purpose, and immediately list **ACTIVE_SPECIALTIES**.
 
             **B. SELECT DOCTOR:**
-               Once the Specialty is provided:
-               * **If the Specialty is INVALID** (not in 'ACTIVE\_SPECIALTIES'), politely inform the user and re-list the **ACTIVE\_SPECIALTIES** using the [START\_OPTIONS] marker.
-               * **If the Specialty is VALID**, list the corresponding doctors in that specialty using the [START_OPTIONS] marker.
+               * **Valid Specialty:** List corresponding doctors.
+               * **Invalid Specialty:** Correct politely and re-list **ACTIVE_SPECIALTIES**.
 
             **C. SELECT SLOT:**
-               Once the Doctor's Name is provided:
-               * **If the Doctor is INVALID** (not a doctor in the current specialty), politely inform the user and re-list the **doctors for that specialty** using the [START\_OPTIONS] marker.
-               * **If the Doctor is VALID**, you **MUST** list their **OPEN_SLOTS** from the SYSTEM DATA using the [START_OPTIONS] marker.
-               * **Do not List Open Slot That have passed the current date**.
+               * **Valid Doctor:** You **MUST** list their **OPEN_SLOTS** (only future times).
+               * **Invalid Doctor:** Correct politely and re-list **doctors for that specialty**.
 
-            **D. CHECK SLOT & CONFIRMATION SETUP:**
-               Once the user selects a date/time:
-               * **If the time IS NOT LISTED** (in OPEN\_SLOTS), politely inform them it is **UNAVAILABLE** and list the **OPEN\_SLOTS** again. Do not proceed.
-               * **If the time IS AVAILABLE** (listed in OPEN\_SLOTS), confirm the three collected details (Specialty, Doctor, Slot) and proceed to the final confirmation step.
+            **D. CHECK SLOT & CONFIRMATION:**
+               * **Valid Slot:** Confirm the three details (Specialty, Doctor, Slot) and ask for final confirmation: **[START_OPTIONS]Yes,No[END_OPTIONS]**.
+               * **Invalid Slot (or in the past):** Correct politely ("unavailable") and **re-list the valid OPEN_SLOTS**.
 
-            **E. FINAL CONFIRMATION:**
-               Once all three details (Specialty, Doctor, and Available Slot) are gathered, you **MUST** ask for final confirmation using a Yes/No option set:
-               Example: "Please confirm this booking: [START_OPTIONS]Yes,No[END_OPTIONS]"
-
-            **F. BOOKING ACTION (Tool Call):**
-               Only after receiving explicit confirmation ("Yes") in the final step, call the **'bookAppointment'** tool.
-               *Note: When sending the parameter \`doctor\_name\`, ensure there are **NO SPACES** (e.g., "Dr. Smith" becomes "Dr.Smith").*
+            **E. FINAL ACTION:**
+               **Only** upon receiving explicit "Yes" confirmation, call the **'bookAppointment'** tool.
+               *Parameter Note: doctor_name must have **NO SPACES** (e.g., "Dr.Smith").*
 
             ---
             ### 4. General Guardrail
-            Your sole purpose is booking appointments. Do not answer general medical questions or provide diagnoses. If the user attempts to veer off-topic, politely redirect them back to the appointment booking process.
+            Your sole purpose is booking appointments. Do not answer general medical questions.
+            * **Crucial Redirection Rule:** When correcting or redirecting input at any stage, you **MUST** immediately follow your explanation with the list of valid options using the **[START_OPTIONS]** marker.
         `;
 };
 

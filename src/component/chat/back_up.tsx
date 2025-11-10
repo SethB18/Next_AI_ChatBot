@@ -15,25 +15,26 @@ import SendIcon from "@mui/icons-material/Send";
 import getSystemInstruction from "./system";
 import callApiWithBackoff from "./callBackoff";
 import RunningClock from "../clock/running_clock";
+import Book from "./book";
 
 // FIX: API_KEY is set to an empty string for secure injection by the runtime environment.
 
 // --- Mock/Integrated External Functions ---
 
 // MOCK: This simulates the external booking API.
-const Book = async (patientName: string, doctorName: string, appointmentTime: string): Promise<void> => {
-    // Simulate an API call delay
-    await new Promise(resolve => setTimeout(resolve, 500)); 
+// const Book = async (patientName: string, doctorName: string, appointmentTime: string): Promise<void> => {
+//     // Simulate an API call delay
+//     await new Promise(resolve => setTimeout(resolve, 500)); 
     
-    // Example: Simulate a failure condition for a specific doctor
-    if (doctorName === "Dr. NoBook") {
-        throw new Error("Dr. NoBook's external calendar is offline. Try another doctor.");
-    }
+//     // Example: Simulate a failure condition for a specific doctor
+//     if (doctorName === "Dr. NoBook") {
+//         throw new Error("Dr. NoBook's external calendar is offline. Try another doctor.");
+//     }
     
-    // Simulate success
-    console.log(`[Mock Booking] Success: ${patientName} booked with ${doctorName} at ${appointmentTime}`);
-    return Promise.resolve();
-};
+//     // Simulate success
+//     console.log(`[Mock Booking] Success: ${patientName} booked with ${doctorName} at ${appointmentTime}`);
+//     return Promise.resolve();
+// };
 
 // --- Types & Declarations (Simplified to use 'any' where needed for compilation) ---
 
@@ -325,7 +326,7 @@ export default function ChatWidget() {
         }
         
         // 5. Process the final model response for the UI Marker and display text
-        const finalResponseText = candidate?.content?.parts?.[0]?.text ?? "[No response from model]";
+        const finalResponseText = candidate?.content?.parts?.[0]?.text ?? "Can you please clarify again?";
         const optionsRegex = /\[START_OPTIONS\](.*?)\[END_OPTIONS\]/s;
         const match = finalResponseText.match(optionsRegex);
         
