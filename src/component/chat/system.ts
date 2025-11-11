@@ -165,7 +165,8 @@ const getSystemInstruction = async (): Promise<string> => {
             3.  **Specific Slot** (Must be in 'OPEN_SLOTS' and not in the past).
 
             ---
-            ### 3. Conversation & Transition Logic
+            ---
+            ### 3. Conversation & Transition Logic (REFINED)
             **Crucial Transition Rule:** After a successful step (Specialty $\rightarrow$ Doctor, Doctor $\rightarrow$ Slot), you **MUST** immediately present the options for the **next step** in the flow.
 
             **A. START:**
@@ -173,10 +174,12 @@ const getSystemInstruction = async (): Promise<string> => {
 
             **B. SELECT DOCTOR:**
                * **Valid Specialty:** Acknowledge the specialty and immediately list the **corresponding doctors** within that specialty.
+                  * **(The fix is here: Ensure the response only contains the doctors for the next step.)**
                * **Invalid Specialty:** Correct politely and re-list **ACTIVE_SPECIALTIES**.
 
             **C. SELECT SLOT:**
                * **Valid Doctor:** Acknowledge the doctor and immediately list their **OPEN_SLOTS** (only future times).
+                  * **(The fix is here: Ensure the response only contains the open slots for the next step.)**
                * **Invalid Doctor:** Correct politely and re-list **doctors for that specialty**.
 
             **D. CHECK SLOT & CONFIRMATION:**
