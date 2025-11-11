@@ -1,0 +1,568 @@
+================================================================================
+                    MARTHA AI APPOINTMENT ASSISTANT
+                    PROJECT DOCUMENTATION & USER GUIDE
+================================================================================
+
+PROJECT OVERVIEW
+================================================================================
+
+Martha AI Appointment Assistant is an intelligent chatbot application built 
+with Next.js that helps users book doctor appointments through natural language 
+conversation. The system uses Google's Gemini AI (gemini-2.5-flash) to provide 
+a conversational interface for scheduling medical appointments.
+
+The application features:
+- Interactive chat interface with floating widget
+- AI-powered conversation using Google Gemini API
+- Real-time appointment booking system
+- Doctor and slot availability management
+- Interactive button-based selection system
+- Real-time clock display
+- Function calling for automated booking
+
+================================================================================
+WHAT HAS BEEN IMPLEMENTED
+================================================================================
+
+1. CHAT INTERFACE COMPONENTS
+   -------------------------
+   ✓ Floating chat widget (back_up.tsx) - Main chat interface
+   ✓ Alternative chat component (ai_agent.tsx) - Secondary implementation
+   ✓ Material-UI based chat UI with modern design
+   ✓ Real-time message display with user/assistant message differentiation
+   ✓ Loading indicators during AI processing
+   ✓ Error handling and display
+   ✓ Auto-scrolling to latest messages
+   ✓ Interactive button options for quick selection
+
+2. AI INTEGRATION
+   --------------
+   ✓ Google Gemini API integration (@google/genai)
+   ✓ System instruction management for AI behavior
+   ✓ Function calling capability (bookAppointment function)
+   ✓ Retry logic with exponential backoff for API calls
+   ✓ Conversation history management
+   ✓ State machine flow for appointment booking
+
+3. APPOINTMENT BOOKING SYSTEM
+   ---------------------------
+   ✓ Doctor availability data management (fetch_slot.ts)
+   ✓ Booked slots tracking
+   ✓ Open slots management
+   ✓ Appointment booking API endpoint (/api/appointment)
+   ✓ Booking validation and error handling
+   ✓ Patient name, doctor name, and appointment time collection
+
+4. SYSTEM INSTRUCTIONS
+   --------------------
+   ✓ Dynamic system instruction generation (system.ts, system_instruction.ts)
+   ✓ Doctor and slot data injection into AI prompts
+   ✓ Specialty-based doctor filtering
+   ✓ Availability checking logic
+   ✓ Interactive option formatting ([START_OPTIONS]...[END_OPTIONS])
+
+5. UI COMPONENTS
+   -------------
+   ✓ Running clock component (running_clock.tsx)
+   ✓ Date/time picker component (datetime_picker.tsx)
+   ✓ Custom button component (myBtn.tsx)
+   ✓ Responsive design with dark mode support
+   ✓ MindStride AI branding and logos
+
+6. API ENDPOINTS
+   -------------
+   ✓ GET /api/appointment - Health check endpoint
+   ✓ POST /api/appointment - Appointment booking endpoint
+   ✓ GET /api/doctor - Doctor list endpoint
+   ✓ POST /api/booked - Booked appointments endpoint (placeholder)
+
+7. PAGES
+   ------
+   ✓ Home page (/) - Landing page with chat widget
+   ✓ Agent page (/agent) - Dedicated agent interface
+
+================================================================================
+TECHNICAL STACK
+================================================================================
+
+FRONTEND FRAMEWORK:
+- Next.js 16.0.0 (React framework)
+- React 19.2.0
+- TypeScript 5
+
+UI LIBRARIES:
+- Material-UI (MUI) 7.3.4
+- Emotion (for MUI styling) 11.14.0
+- Tailwind CSS 4
+- Lucide React (icons)
+
+AI/API:
+- Google Generative AI (@google/genai) 1.27.0
+- Gemini 2.5 Flash model
+
+UTILITIES:
+- Day.js 1.11.19 (date handling)
+- Dotenv 17.2.3 (environment variables)
+
+DEVELOPMENT TOOLS:
+- ESLint 9
+- TypeScript 5
+- Babel React Compiler
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+ai-agent/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx                    # Home page
+│   │   ├── agent/
+│   │   │   └── page.tsx                # Agent page
+│   │   ├── layout.tsx                  # Root layout
+│   │   ├── globals.css                 # Global styles
+│   │   └── api/
+│   │       ├── appointment/
+│   │       │   └── route.js            # Appointment booking API
+│   │       ├── doctor/
+│   │       │   └── route.js            # Doctor list API
+│   │       └── booked/
+│   │           └── route.js             # Booked appointments API
+│   ├── component/
+│   │   ├── chat/
+│   │   │   ├── ai_agent.tsx            # Alternative chat component
+│   │   │   ├── back_up.tsx             # Main chat widget (primary)
+│   │   │   ├── book.ts                 # Booking function
+│   │   │   ├── callBackoff.ts          # API retry logic
+│   │   │   ├── system.ts               # System instruction generator
+│   │   │   ├── system_instruction.ts   # Alternative system instruction
+│   │   │   ├── myBtn.tsx               # Custom button component
+│   │   │   └── chat.ts                 # Chat utilities
+│   │   ├── clock/
+│   │   │   └── running_clock.tsx       # Real-time clock component
+│   │   └── date/
+│   │       └── datetime_picker.tsx      # Date/time picker
+│   └── fetch_data/
+│       └── fetch_slot.ts               # Doctor and slot data
+├── public/
+│   └── icons/                          # Branding assets
+├── package.json                        # Dependencies
+├── tsconfig.json                       # TypeScript config
+├── next.config.ts                      # Next.js config
+└── .env.local                          # Environment variables (create this)
+
+================================================================================
+SETUP GUIDE
+================================================================================
+
+PREREQUISITES:
+--------------
+1. Node.js 20.x LTS or newer
+2. npm 10+ (comes with Node.js)
+3. Google Gemini API Key
+
+INSTALLATION STEPS:
+-------------------
+
+Step 1: Navigate to Project Directory
+   cd ai-agent
+
+Step 2: Install Dependencies
+   npm install
+
+Step 3: Create Environment File
+   Create a file named `.env.local` in the `ai-agent/` directory
+   
+   Add the following line:
+   NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+   
+   Replace `your_gemini_api_key_here` with your actual Google Gemini API key.
+   You can obtain one from: https://makersuite.google.com/app/apikey
+
+Step 4: Run Development Server
+   npm run dev
+
+Step 5: Open in Browser
+   Navigate to: http://localhost:3000
+
+PRODUCTION BUILD:
+-----------------
+To build for production:
+   npm run build
+   npm start
+
+================================================================================
+USAGE GUIDE
+================================================================================
+
+HOW TO USE THE CHATBOT:
+-----------------------
+
+1. OPENING THE CHAT
+   - Look for the floating chat button in the bottom-right corner
+   - Click the button to open the chat widget
+   - The chat will display: "👋 Hello! I am Martha Assistant, how can i help you today?"
+
+2. BOOKING AN APPOINTMENT - STEP BY STEP
+
+   Step 1: Select a Specialty
+   - Martha will greet you and list available specialties
+   - Click on one of the interactive buttons or type the specialty name
+   - Available specialties include:
+     * Cardiology
+     * Neurology
+     * Dermatology
+     * Pediatrics
+     * Orthopedics
+
+   Step 2: Choose a Doctor
+   - After selecting a specialty, Martha will show available doctors
+   - Click on a doctor's name button or type it
+   - Example doctors:
+     * Dr. Jone (Cardiology)
+     * Dr. Tyson (Cardiology)
+     * Dr. Kim Vexler (Neurology)
+     * Dr. Jesse (Dermatology)
+     * Dr. Griek (Dermatology)
+     * Dr. Anya Sharma (Pediatrics)
+     * Dr. Ben Carter (Orthopedics)
+
+   Step 3: Select an Appointment Time
+   - Martha will display available time slots for the selected doctor
+   - Click on a time slot button or type the preferred time
+   - Only future time slots that are not booked will be shown
+   - Format: "YYYY-MM-DD HH:MM:SS" (e.g., "2025-11-12 14:00:00")
+
+   Step 4: Confirm Booking
+   - Martha will summarize your selection:
+     * Specialty
+     * Doctor name
+     * Appointment time
+   - You'll see confirmation buttons: "Yes" or "No"
+   - Click "Yes" to confirm and book the appointment
+   - Click "No" to cancel and start over
+
+   Step 5: Booking Completion
+   - Upon confirmation, Martha will process the booking
+   - You'll see: "Processing appointment request..."
+   - A success alert will appear confirming the booking
+   - The appointment is now booked!
+
+3. CHAT FEATURES
+   - Type messages in the input field at the bottom
+   - Press Enter or click the Send button to send messages
+   - View conversation history in the chat window
+   - Close the chat by clicking the X button in the header
+   - Real-time clock displays current time in the chat header
+
+4. INTERACTIVE BUTTONS
+   - When Martha presents options, they appear as clickable buttons
+   - Click any button to select that option instantly
+   - You can also type your response instead of clicking
+   - Buttons are color-coded and easy to identify
+
+5. ERROR HANDLING
+   - If a slot is already booked, Martha will inform you
+   - If you select an invalid option, Martha will correct you
+   - If the AI service is unavailable, an error message will appear
+   - Always check the console for detailed error logs
+
+================================================================================
+API ENDPOINTS DOCUMENTATION
+================================================================================
+
+1. GET /api/appointment
+   --------------------
+   Purpose: Health check endpoint
+   Method: GET
+   Response:
+   {
+     "Messsage": "Hello from NextJs"
+   }
+
+2. POST /api/appointment
+   ---------------------
+   Purpose: Book an appointment
+   Method: POST
+   Headers:
+     Content-Type: application/json
+   Request Body:
+   {
+     "patient_name": "John Doe",
+     "doctor_name": "Dr.Jone",
+     "book_date": "2025-11-12 14:00:00"
+   }
+   
+   Response (Success):
+   {
+     "message": "Booked successfully!"
+   }
+   
+   Response (Error - 400):
+   {
+     "error": "Missing required parameters.",
+     "required": ["patient_name", "doctor_name", "book_date"],
+     "received": { ... }
+   }
+   
+   Response (Error - 500):
+   {
+     "error": "Invalid request or JSON format."
+   }
+
+3. GET /api/doctor
+   ---------------
+   Purpose: Get list of available doctors
+   Method: GET
+   Response:
+   [
+     {
+       "id": 1,
+       "name": "Dr.Jone",
+       "specialty": "Cardiology"
+     },
+     ...
+   ]
+
+================================================================================
+KEY COMPONENTS EXPLANATION
+================================================================================
+
+1. ChatWidget (back_up.tsx)
+   -------------------------
+   - Main chat interface component
+   - Handles all user interactions
+   - Manages conversation state
+   - Integrates with Gemini API
+   - Implements function calling for booking
+   - Supports interactive button options
+   - Features real-time clock display
+
+2. System Instruction (system.ts)
+   -------------------------------
+   - Generates dynamic AI prompts
+   - Injects doctor and slot availability data
+   - Defines AI behavior and conversation flow
+   - Implements state machine logic
+   - Formats interactive options
+
+3. Booking Function (book.ts)
+   ---------------------------
+   - Makes API call to /api/appointment
+   - Handles booking requests
+   - Manages error responses
+   - Returns booking status
+
+4. API Retry Logic (callBackoff.ts)
+   ----------------------------------
+   - Implements exponential backoff
+   - Retries failed API calls up to 5 times
+   - Handles rate limiting (429 errors)
+   - Manages server errors (5xx)
+
+5. Slot Data (fetch_slot.ts)
+   --------------------------
+   - Contains doctor information
+   - Manages booked appointments
+   - Provides available time slots
+   - Organized by specialty
+
+================================================================================
+CONFIGURATION
+================================================================================
+
+ENVIRONMENT VARIABLES:
+---------------------
+Required in `.env.local`:
+- NEXT_PUBLIC_GEMINI_API_KEY: Your Google Gemini API key
+
+AI MODEL CONFIGURATION:
+-----------------------
+- Model: gemini-2.5-flash
+- Configured in: callBackoff.ts and ai_agent.tsx
+
+PATIENT NAME:
+-------------
+- Default patient name: "Boro" (in system.ts)
+- Default patient name: "RealWat" (in system_instruction.ts)
+- Can be customized in system instruction files
+
+DOCTOR DATA:
+------------
+- Managed in: src/fetch_data/fetch_slot.ts
+- Format: Array of doctor objects with:
+  * name: Doctor's name
+  * specialty: Medical specialty
+  * appointment: Array of booked appointments
+  * open_slots: Array of available time slots
+
+================================================================================
+CUSTOMIZATION GUIDE
+================================================================================
+
+CHANGING AI BEHAVIOR:
+---------------------
+Edit: src/component/chat/system.ts
+- Modify the system instruction text
+- Adjust conversation flow logic
+- Change patient name
+- Update specialty/doctor lists
+
+ADDING NEW DOCTORS:
+-------------------
+Edit: src/fetch_data/fetch_slot.ts
+- Add new doctor objects to the array
+- Include name, specialty, appointments, and open_slots
+
+MODIFYING CHAT UI:
+------------------
+Edit: src/component/chat/back_up.tsx
+- Change colors, sizes, positions
+- Adjust message styling
+- Modify button appearance
+
+UPDATING API ENDPOINTS:
+-----------------------
+Edit: src/app/api/appointment/route.js
+- Modify booking logic
+- Add validation rules
+- Change response format
+
+CHANGING BRANDING:
+------------------
+- Replace logos in: public/icons/
+- Update references in: src/app/page.tsx
+- Modify chat header in: back_up.tsx
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+ISSUE: Chat widget not appearing
+SOLUTION:
+- Check if ChatWidget is imported in page.tsx
+- Verify z-index in component styles
+- Check browser console for errors
+
+ISSUE: API calls failing
+SOLUTION:
+- Verify NEXT_PUBLIC_GEMINI_API_KEY is set in .env.local
+- Check API key validity
+- Review network tab for error details
+- Check rate limits on Gemini API
+
+ISSUE: Booking not working
+SOLUTION:
+- Verify all three parameters are provided
+- Check doctor name format (no spaces, e.g., "Dr.Jone")
+- Ensure appointment time is in correct format
+- Check /api/appointment endpoint logs
+
+ISSUE: Interactive buttons not showing
+SOLUTION:
+- Verify system instruction includes [START_OPTIONS] markers
+- Check AI response format
+- Review console for parsing errors
+
+ISSUE: Styling looks broken
+SOLUTION:
+- Run: npm install (to ensure MUI dependencies)
+- Check if @emotion/react and @emotion/styled are installed
+- Verify Tailwind CSS is configured correctly
+
+ISSUE: Build errors
+SOLUTION:
+- Clear .next directory: rm -rf .next
+- Reinstall dependencies: rm -rf node_modules && npm install
+- Check TypeScript errors: npm run lint
+
+================================================================================
+DEVELOPMENT WORKFLOW
+================================================================================
+
+1. Start Development Server:
+   npm run dev
+
+2. Make Changes:
+   - Edit component files
+   - Update system instructions
+   - Modify API endpoints
+
+3. Test Changes:
+   - Open http://localhost:3000
+   - Test chat functionality
+   - Verify booking flow
+
+4. Check for Errors:
+   - Browser console (F12)
+   - Terminal output
+   - Network tab for API calls
+
+5. Build for Production:
+   npm run build
+   npm start
+
+================================================================================
+IMPORTANT NOTES
+================================================================================
+
+1. API KEY SECURITY:
+   - Never commit .env.local to version control
+   - Use environment variables for sensitive data
+   - NEXT_PUBLIC_ prefix exposes key to browser (acceptable for this use case)
+
+2. DOCTOR NAME FORMAT:
+   - When booking, doctor names must have NO SPACES
+   - Example: "Dr. Jone" becomes "Dr.Jone" in API calls
+   - This is handled automatically by the system
+
+3. TIME SLOT FORMAT:
+   - Format: "YYYY-MM-DD HH:MM:SS"
+   - Example: "2025-11-12 14:00:00"
+   - Must be in the future
+   - Must not be in booked appointments list
+
+4. CONVERSATION FLOW:
+   - The AI follows a state machine pattern
+   - Must collect: Specialty → Doctor → Time Slot → Confirmation
+   - Each step must be completed before proceeding
+
+5. INTERACTIVE OPTIONS:
+   - Format: [START_OPTIONS]Option1,Option2,Option3[END_OPTIONS]
+   - Must be included in AI responses for buttons to appear
+   - Options are comma-separated
+
+================================================================================
+FUTURE ENHANCEMENTS (SUGGESTED)
+================================================================================
+
+- User authentication and profile management
+- Appointment history viewing
+- Email/SMS notifications
+- Calendar integration
+- Multi-language support
+- Voice input/output
+- Appointment rescheduling
+- Cancellation functionality
+- Doctor reviews and ratings
+- Payment integration
+- Integration with external medical systems
+
+================================================================================
+SUPPORT & CONTACT
+================================================================================
+
+For issues or questions:
+- Check the troubleshooting section above
+- Review browser console for errors
+- Check API endpoint responses
+- Verify environment variables
+
+Project Repository: Agent-frontend/ai-agent
+Framework: Next.js 16
+AI Model: Google Gemini 2.5 Flash
+
+================================================================================
+END OF DOCUMENTATION
+================================================================================
+
