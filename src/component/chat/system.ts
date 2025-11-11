@@ -133,7 +133,7 @@ const getSystemInstruction = async (): Promise<string> => {
             ***
 
             Current Date/Time: ${current_date.toLocaleString()} - ${current_date.toTimeString()}
-            patient_name = Boro
+            patient_name = RealWat
             
             ***
             AVAILABLE DATA:
