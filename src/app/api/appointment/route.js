@@ -45,7 +45,7 @@ export async function POST(request) {
     }
 
     // Check for missing parameters
-    if (!patient_name || !doctor_name || !book_date) {
+    if (!patient_name || !doctor_name || !book_date || !doctor || isBusy) {
       return NextResponse.json(
         {
           error: "Missing required parameters.",

@@ -1,5 +1,5 @@
 const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY; 
-const MODEL_NAME = 'gemini-2.5-flash';
+const MODEL_NAME = 'gemini-2.5-flash'; 
 
 const callApiWithBackoff = async (payload: any, maxRetries = 5): Promise<any> => {
     let delay = 1000;
@@ -29,7 +29,10 @@ const callApiWithBackoff = async (payload: any, maxRetries = 5): Promise<any> =>
                 throw new Error(`API call failed with status ${response.status}: ${errorBody}`);
             }
 
-            return await response.json();
+            const jsonResponse = await response.json();
+            console.log(jsonResponse);
+
+            return jsonResponse;    
             
         } catch (error) {
             if (i === maxRetries - 1) throw error; // Re-throw on final failure

@@ -1,7 +1,6 @@
 import React from "react";
 import Slot from "@/fetch_data/fetch_slot";
 
-
 // const all_doctor:any = {
 
 // "Cardiology": ["Dr. Smith", "Dr. Jones"],
@@ -125,14 +124,16 @@ let current_date = new Date();
 
 const extract_doctors = JSON.stringify(all_doctor)
 
+// ... (previous code)
+
 const getSystemInstruction = async (): Promise<string> => {
     return `
             ***
             SYSTEM DATA: AVAILABILITY & PATIENT
             ***
 
-            Current Date/Time: {current_date.strftime('%Y-%m-%d %H:%M:%S')}
-            patient_name = {patient_name}
+            Current Date/Time: ${current_date.toLocaleString()} - ${current_date.toTimeString()}
+            patient_name = Boro
             
             ***
             AVAILABLE DATA:
@@ -155,7 +156,7 @@ const getSystemInstruction = async (): Promise<string> => {
             **STRICTLY ADHERE:** When listing any options (Specialty, Doctor, Slot, Confirmation), you **MUST** format your response with the exact markers:
             **[START_OPTIONS]Item 1,Item 2,Item 3[END_OPTIONS]**
             *Always include a short, polite introductory phrase immediately before the [START_OPTIONS] marker.*
-
+            
             ---
             ### 2. Booking State Flow
             Guide the user through collecting these three mandatory steps in order:
@@ -165,16 +166,17 @@ const getSystemInstruction = async (): Promise<string> => {
 
             ---
             ### 3. Conversation & Transition Logic
+            **Crucial Transition Rule:** After a successful step (Specialty $\rightarrow$ Doctor, Doctor $\rightarrow$ Slot), you **MUST** immediately present the options for the **next step** in the flow.
 
             **A. START:**
                Greet the user, state purpose, and immediately list **ACTIVE_SPECIALTIES**.
 
             **B. SELECT DOCTOR:**
-               * **Valid Specialty:** List corresponding doctors.
+               * **Valid Specialty:** Acknowledge the specialty and immediately list the **corresponding doctors** within that specialty.
                * **Invalid Specialty:** Correct politely and re-list **ACTIVE_SPECIALTIES**.
 
             **C. SELECT SLOT:**
-               * **Valid Doctor:** You **MUST** list their **OPEN_SLOTS** (only future times).
+               * **Valid Doctor:** Acknowledge the doctor and immediately list their **OPEN_SLOTS** (only future times).
                * **Invalid Doctor:** Correct politely and re-list **doctors for that specialty**.
 
             **D. CHECK SLOT & CONFIRMATION:**
@@ -189,8 +191,8 @@ const getSystemInstruction = async (): Promise<string> => {
             ### 4. General Guardrail
             Your sole purpose is booking appointments. Do not answer general medical questions.
             * **Crucial Redirection Rule:** When correcting or redirecting input at any stage, you **MUST** immediately follow your explanation with the list of valid options using the **[START_OPTIONS]** marker.
-        `;
+            * **
+         `;
 };
-
 
 export default getSystemInstruction;
