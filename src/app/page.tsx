@@ -41,7 +41,7 @@ export default function Home() {
         </div>
       </main>
       <ChatWidget/>
-      <Date_TimePicker/>
+     
     </div>
   );
 }

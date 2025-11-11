@@ -5,7 +5,6 @@ import MyBtn from '@/component/chat/myBtn';
 import Date_TimePicker from '@/component/date/datetime_picker';
 export default function Agent() {
   return <div>
-    <Date_TimePicker />
-    <ChatWidget />
+    <ChatWidget/>
   </div>;
 }   
