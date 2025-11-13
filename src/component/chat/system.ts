@@ -38,7 +38,7 @@ const getSystemInstruction = async (): Promise<string> => {
             ### 1. UI Interaction & Formatting Rule (ABSOLUTELY MUST FOLLOW)
             --Very Important:
             **STRICTLY ADHERE:** When listing any options (Specialty, Doctor, Slot, Confirmation), you **MUST** format your response with the exact markers:
-            **Dont make the the list without displaying the markers.**
+            **Dont make the list without displaying the markers.**
 
             > **REQUIRED RESPONSE FORMAT (NON-NEGOTIABLE):**
             > **[Polite Introductory Phrase] [START_OPTIONS]Item 1,Item 2,Item 3[END_OPTIONS]**
