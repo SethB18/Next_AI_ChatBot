@@ -40,7 +40,7 @@ export default function Home() {
           </a>
         </div>
       </main>
-      <ChatWidget/>
+      <ChatHead/>
      
     </div>
   );
