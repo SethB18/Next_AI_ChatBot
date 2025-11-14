@@ -17,27 +17,6 @@ import callApiWithBackoff from "./callBackoff";
 import RunningClock from "../clock/running_clock";
 import Book from "./book";
 
-// FIX: API_KEY is set to an empty string for secure injection by the runtime environment.
-
-// --- Mock/Integrated External Functions ---
-
-// MOCK: This simulates the external booking API.
-// const Book = async (patientName: string, doctorName: string, appointmentTime: string): Promise<void> => {
-//     // Simulate an API call delay
-//     await new Promise(resolve => setTimeout(resolve, 500)); 
-    
-//     // Example: Simulate a failure condition for a specific doctor
-//     if (doctorName === "Dr. NoBook") {
-//         throw new Error("Dr. NoBook's external calendar is offline. Try another doctor.");
-//     }
-    
-//     // Simulate success
-//     console.log(`[Mock Booking] Success: ${patientName} booked with ${doctorName} at ${appointmentTime}`);
-//     return Promise.resolve();
-// };
-
-// --- Types & Declarations (Simplified to use 'any' where needed for compilation) ---
-
 interface BookAppointmentArgs {
   patientName: string;
   doctorName: string;
@@ -49,7 +28,6 @@ interface Message {
   text: string;
 }
 
-// Using 'any' for the type structure to avoid compilation error on unresolvable imports
 const bookAppointmentDeclaration: any = { 
   name: "bookAppointment",
   description: "Books a doctor's appointment once the patient name, doctor's name, and desired time have been provided by the user.",
@@ -73,17 +51,12 @@ const bookAppointmentDeclaration: any = {
   },
 };
 
-// --- API Fetch Helper with Backoff (Used for all API calls) ---
-
-
-// --- Main Component ---
 export default function ChatHead() {
   const [instruction, setInstruction] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // State for interactive buttons
   const [interactiveOptions, setInteractiveOptions] = useState<string[] | null>(null);
   
   const [chatHistory, setChatHistory] = useState<Message[]>([
@@ -94,10 +67,10 @@ export default function ChatHead() {
   useEffect(() => {
     async function loadInstruction() {
       try {
-        // Use the local mock function
+
         const data = await getSystemInstruction();
 
-        console.log(data)
+        // console.log(data)
         setInstruction(data);
         
       } catch (error) {
@@ -106,8 +79,6 @@ export default function ChatHead() {
     }
     loadInstruction();
   }, []);
-
-  // Ref and function for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -126,21 +97,16 @@ export default function ChatHead() {
     scrollToBottom();
   }, [chatHistory, isLoading, interactiveOptions]);
 
-  // Handler for button clicks, sends the selected option as the next user message
   const handleSelection = (selection: string) => {
-    // Clear the buttons immediately
     setInteractiveOptions(null); 
-    
-    // Send the option directly as the user's message
+
     const selectionMessage = selection; 
-    
-    // Update chat history for immediate UI feedback of the selection
+
     setChatHistory((prev) => [
       ...prev, 
       { role: "user", text: selectionMessage },
     ]);
     
-    // Clear input state and trigger the send process
     setMessage(""); 
     setTimeout(() => {
         handleSend(undefined, selectionMessage);
@@ -149,7 +115,7 @@ export default function ChatHead() {
 
 
   const inputRef = useRef<HTMLInputElement>(null);
-  // Main message sending and function call handling logic
+
   const handleSend = async (e?: FormEvent, messageOverride?: string) => {
     e?.preventDefault(); 
     
@@ -157,30 +123,26 @@ export default function ChatHead() {
 
     if (!userMessage || isLoading) return;
     
-    // Clear the input field if it wasn't a button click
     if (!messageOverride) {
       setMessage("");
-      // Update chat history for text input
+
       setChatHistory((prev) => [
           ...prev, 
           { role: "user", text: userMessage },
       ]);
     } else {
-       // Clear input state after button click action is queued
+
        setMessage(""); 
     }
     
     setIsLoading(true);
-    setInteractiveOptions(null); // Hide any existing options when sending a new message
+    setInteractiveOptions(null);
 
     try {
-        // 1. Define the top-level configuration objects for the API payload
-        // NOTE: The 'systemInstruction' and 'tools' must be top-level properties 
-        // when using the raw fetch/JSON payload structure with generateContent.
+
         const systemInstruction: any = { parts: [{ text: instruction }] }; 
         const tools: any = [{ functionDeclarations: [bookAppointmentDeclaration] }];
 
-        // 2. Map the current chat history to the API format (Contents)
         let API_CONTENTS: any[] = chatHistory
             .filter(msg => msg.role === 'user' || msg.role === 'assistant')
             .map(msg => ({
@@ -188,7 +150,6 @@ export default function ChatHead() {
                 parts: [{ text: msg.text }]
             }));
         
-        // Add the current user message to the API payload.
         API_CONTENTS.push({
             role: 'user',
             parts: [{ text: userMessage }]
@@ -196,26 +157,21 @@ export default function ChatHead() {
 
         console.log("API CONTENTS:", API_CONTENTS);
         
-        // 3. Construct the first payload
         let apiPayload: any = { 
             contents: API_CONTENTS, 
             systemInstruction: systemInstruction, // TOP LEVEL
             tools: tools, // TOP LEVEL
         };
         
-        // --- Start of Function Calling Loop ---
-        // Use the existing fetch wrapper
         let result = await callApiWithBackoff(apiPayload);
         let candidate = result?.candidates?.[0];
         
-        // Extract function calls from the content parts (using the JSON result structure)
         let functionCalls = candidate?.content?.parts
             ?.filter((part: any) => part.functionCall)
             .map((part: any) => part.functionCall);
         
         while (functionCalls && functionCalls.length > 0) {
             
-            // Add a "processing" message to the UI
             setChatHistory((prev) => [...prev, { role: "assistant", text: "Processing appointment request..." }]);
             
             const functionCall: any = functionCalls[0];
@@ -223,9 +179,7 @@ export default function ChatHead() {
 
             let functionResult: any;
             
-            // Execute the function locally (our booking method)
             if (name === 'bookAppointment') {
-                // Ensure args are parsed correctly (may be an object or a JSON string)
                 let parsedArgs: any = args;
                 if (typeof parsedArgs === 'string') {
                   try {
@@ -240,7 +194,7 @@ export default function ChatHead() {
                   console.error('Invalid or missing arguments for bookAppointment:', parsedArgs);
                   functionResult = { status: 'Error', message: 'Invalid or missing arguments for bookAppointment' };
                 } else {
-                  // Standardize argument extraction and validation
+
                   const patientName = String(parsedArgs.patientName ?? '').trim();
                   const doctorName = String(parsedArgs.doctorName ?? '').trim();
                   const appointmentTime = String(parsedArgs.appointmentTime ?? '').trim();
@@ -255,33 +209,25 @@ export default function ChatHead() {
                     functionResult = { status: 'Error', message: `Missing required fields: ${missingFields.join(', ')}. Please provide all required information.` };
                   } else {
                     
-                    // --- AWAITING THE EXTERNAL API (CORE BOOKING LOGIC) ---
                     try {
-                      // Use the local mock Book function
-                      await Book(patientName, doctorName, appointmentTime);
 
-                      // If it succeeds, set the SUCCESSFUL functionResult for Gemini
+                      await Book(patientName, doctorName, appointmentTime);
                       functionResult = { 
                           status: "Success", 
                           message: `Appointment confirmed for ${patientName} with Dr. ${doctorName} at ${appointmentTime}.` 
                       };
-                      
                       console.log("--- ✅ APPOINTMENT BOOKING SUCCESSFUL ✅ ---");
-                      // Use alert to notify the user of the final action
+  
                       alert(`Appointment Confirmed for ${patientName} with Dr. ${doctorName} at ${appointmentTime}!`);
-
                     } catch (err: any) {
-                      // If it fails, set a DETAILED ERROR functionResult for Gemini
                       const errorMessage = err.message || 'Unknown server error during booking.';
                       console.error('External Book call failed:', errorMessage);
                       functionResult = { 
                           status: 'Error', 
                           message: `The external booking system failed. Reason: ${errorMessage}.` 
                       };
-                      
                       alert(`Booking Failed: ${errorMessage}`);
                     }
-                    // --- END CORE BOOKING LOGIC ---
                   }
                 }
                 
@@ -289,25 +235,19 @@ export default function ChatHead() {
                 console.error(`Unknown function call: ${name}`);
                 functionResult = { error: `Unknown function: ${name}` };
             }
-
-            // 3. Prepare function response parts and update contents for the next API call
             const functionResponsePart: any = {
                 functionResponse: {
                     name: name,
-                    // When using the raw fetch structure, the function response payload needs a 'result' wrapper
                     response: { result: functionResult }, 
                 }
             };
-            
-            // Append the model's request turn and our function response turn
+  
             API_CONTENTS = [
                 ...API_CONTENTS,
-                // Note: the model's request turn needs to be reconstructed from the current functionCall object
                 { role: 'model', parts: [{ functionCall: functionCall }] }, 
                 { role: 'function', parts: [functionResponsePart] } 
             ];
 
-            // 4. Call the model again with the function result included
             apiPayload = { 
                 contents: API_CONTENTS, 
                 systemInstruction: systemInstruction, // TOP LEVEL
@@ -315,47 +255,42 @@ export default function ChatHead() {
             };
             result = await callApiWithBackoff(apiPayload);
             candidate = result?.candidates?.[0];
-            
-            // Re-fetch function calls from the parts of the new candidate
+        
             functionCalls = candidate?.content?.parts
                 ?.filter((part: any) => part.functionCall)
                 .map((part: any) => part.functionCall);
             
-            // Remove the "processing" message from the UI before getting the final response
+            
             setChatHistory((prev) => prev.slice(0, prev.length - 1));
         }
         
-        // 5. Process the final model response for the UI Marker and display text
         const finalResponseText = candidate?.content?.parts?.[0]?.text ?? "Can you please clarify again?";
         const optionsRegex = /\[START_OPTIONS\](.*?)\[END_OPTIONS\]/s;
         const match = finalResponseText.match(optionsRegex);
         
         if (match && match[1]) {
-            // Found options marker: Extract options and clean up the text.
-            const options = match[1].split(',').map((s: string) => s.trim()).filter((s: string) => s.length > 0);
-            const cleanText = finalResponseText.replace(optionsRegex, '').trim();
-            
-            setInteractiveOptions(options);
-            setChatHistory((prev) => [...prev, { role: 'assistant', text: cleanText }]);
+          const options = match[1].split(',').map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+          const cleanText = finalResponseText.replace(optionsRegex, '').trim();
+          
+          setInteractiveOptions(options);
+          setChatHistory((prev) => [...prev, { role: 'assistant', text: cleanText }]);
 
         } else {
-            // No options marker: Treat as standard text response.
-            setInteractiveOptions(null);
-            setChatHistory((prev) => [...prev, { role: 'assistant', text: finalResponseText }]);
+          setInteractiveOptions(null);
+          setChatHistory((prev) => [...prev, { role: 'assistant', text: finalResponseText }]);
         }
 
     } catch (error) {
-        console.error("Failed to call Gemini API:", error);
-        // Ensure we handle the state update safely on error
-        setChatHistory((prev) => [...prev, { role: "error", text: "Oops! Could not connect to the AI service. Please check the console for details." }]);
+      console.error("Failed to call Gemini API:", error);
+
+      setChatHistory((prev) => [...prev, { role: "error", text: "Oops! Could not connect to the AI service. Please check the console for details." }]);
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
       inputRef.current?.focus();
     }
     
   };
   
-  // Allows sending message by pressing Enter key
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSend();
@@ -505,7 +440,7 @@ export default function ChatHead() {
             <IconButton
               color="primary"
               sx={{ ml: 1 }}
-              onClick={() => handleSend()} // Call without arguments for standard text input
+              onClick={() => handleSend()}
               disabled={isLoading || !message.trim()}
             >
               <SendIcon />

@@ -13,11 +13,17 @@ export default async function systemInstruction(){
         console.log(error)
     }
 
+    let current_date = new Date();
+
+
     return(
         `
             ***
             SYSTEM DATA: UNAVAILABLE SLOTS (BOOKED)
             ***
+
+            **Current Date/Time:** ${current_date.toDateString()} - ${current_date.toLocaleTimeString()}
+
             ${all_doctor}
 
             patient_name = RealWat

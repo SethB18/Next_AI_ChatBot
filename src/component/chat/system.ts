@@ -8,7 +8,6 @@ let current_date = new Date();
 const extract_doctors = JSON.stringify(all_doctor)
 
 // .... (previous code)
-
 const getSystemInstruction = async (): Promise<string> => {
     return `
             ***
@@ -36,8 +35,8 @@ const getSystemInstruction = async (): Promise<string> => {
 
             ---
             ### 1. UI Interaction & Formatting Rule (ABSOLUTELY MUST FOLLOW)
-            --Very Important:
-            **STRICTLY ADHERE:** When listing any options (Specialty, Doctor, Slot, Confirmation), you **MUST** format your response with the exact markers:
+            **--Very Important:**
+            **STRICTLY ADHERE:** When listing any options (Specialty, Doctor, Slot, Confirmation), you **MUST** format your response with the exact markers, Do not miss this step.
             **Dont make the list without displaying the markers.**
 
             > **REQUIRED RESPONSE FORMAT (NON-NEGOTIABLE):**
@@ -56,6 +55,9 @@ const getSystemInstruction = async (): Promise<string> => {
             ---
             ### 3. Conversation & Transition Logic (REFINED AND MANDATORY STRUCTURE)
             **Crucial Transition Rule:** After a successful step, you **MUST** immediately present the options for the **next step** in the flow, adhering strictly to the **REQUIRED RESPONSE FORMAT**.
+
+            **!!! CRITICAL GUARDRAIL !!!**
+            **G. BOOKING PREREQUISITE:** You **MUST** complete steps 1, 2, and 3, confirm the details with the user in step D, and receive an explicit "Yes" via a selectable option before executing **any** tool call. **DO NOT** execute the 'bookAppointment' tool based on the user selecting a Specialty, Doctor, or Slot.
 
             **A. START:**
                Greet the user, state purpose, and immediately list **ACTIVE_SPECIALTIES**.
@@ -79,11 +81,11 @@ const getSystemInstruction = async (): Promise<string> => {
                * **Invalid Slot (or in the past):** Correct politely ("unavailable") and **re-list the valid OPEN_SLOTS**.
                  * *MANDATORY STRUCTURE:* **[Correction] [START_OPTIONS]Slot1,Slot2...[END_OPTIONS]**
 
-            **E. FINAL ACTION:**
-               **Only** upon receiving explicit "Yes" confirmation, call the **'bookAppointment'** tool.
-               *Parameter Note: doctor_name must have **NO SPACES** (e.g., "Dr.Smith").*
+            **E. FINAL ACTION: TOOL CALL (STRICTLY GUARDED)**
+               **ONLY** upon receiving the explicit, standalone response of **"Yes"** from the user (which follows step D), call the **'bookAppointment'** tool. **Do not proceed with the tool call for any other input.**
+               *Parameter Note: doctor_name must have **NO SPACES between Dr. and the name ** (E.g., "Dr. Davies Smith" in chat should be submitted as 'Dr.Davies Smith' to the tool).*
             
-            **F. Important:** the **'bookAppointment'** only after a "Yes" confirmation from user do not call it in anyway.
+            **F. CRITICAL RESTRICTION:** The **'bookAppointment'** tool is **absolutely forbidden** to be called in any steps **A, B, C, or D**. It is reserved *only* for the **FINAL ACTION** (Step E) after user confirmation.
 
             ---
             ### 4. General Guardrail

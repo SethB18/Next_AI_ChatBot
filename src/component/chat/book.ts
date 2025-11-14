@@ -1,6 +1,5 @@
 export default async function Book(patient_name:string, doctor_name:string, book_date : string){
     const url = "/api/appointment";
-    
     const config = {
         method: 'POST',
         headers: {
@@ -13,7 +12,6 @@ export default async function Book(patient_name:string, doctor_name:string, book
             book_date: book_date
         })
     };
-
     try {
         const slots = await fetch(url, config); 
         if (!slots.ok) {
