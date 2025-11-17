@@ -40,12 +40,7 @@ export default function Home() {
           </a>
         </div>
       </main>
-<<<<<<< HEAD
       <ChatHead/>
-=======
-      <ChatWidget/>
->>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
-     
     </div>
   );
 }
