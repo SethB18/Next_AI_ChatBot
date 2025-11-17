@@ -1,7 +1,23 @@
 import React from "react";
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import Slot from "@/fetch_data/fetch_slot";
 const getDoctor = Slot();
+=======
+const getDoctor = [
+    {
+      'name': 'Dr.Jone',
+      'specialty':'Cardiology',
+      'appointment' : [
+        "Patient 954 - Dr.Jone on 2025-10-30 11:00:00",
+        "Patient 906 - Dr.Jone on 2025-10-31 17:00:00",
+        "Patient 916 - Dr.Jone on 2025-10-31 07:00:00",
+        "Patient 677 - Dr.Jone on 2025-11-01 10:00:00",
+        "Patient 607 - Dr.Jone on 2025-11-01 07:00:00"
+      ]
+    },
+]
+>>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
 
 export async function GET(request){
     return new Response(JSON.stringify({"Messsage" : "Hello from NextJs"}))

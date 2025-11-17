@@ -60,7 +60,11 @@ export default function ChatHead() {
   const [interactiveOptions, setInteractiveOptions] = useState<string[] | null>(null);
   
   const [chatHistory, setChatHistory] = useState<Message[]>([
+<<<<<<< HEAD
     { role: "assistant", text: "👋 Hello! I am Martha Assistant, how can i help you today?" },
+=======
+    { role: "assistant", text: "👋 Hello! I am Martha, how can i help you today?" },
+>>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
   ]);
 
 
@@ -177,8 +181,14 @@ export default function ChatHead() {
             const functionCall: any = functionCalls[0];
             const { name, args } = functionCall;
 
+<<<<<<< HEAD
             let functionResult: any;
             
+=======
+            // console.log(`Model requested to call function: ${name}`)
+            let functionResult: any;
+            // Execute the function locally (our booking method)
+>>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
             if (name === 'bookAppointment') {
                 let parsedArgs: any = args;
                 if (typeof parsedArgs === 'string') {
@@ -332,10 +342,14 @@ export default function ChatHead() {
               p: 1.5,
             }}
           >
+<<<<<<< HEAD
             <Box sx={{ display: 'flex', flexDirection: 'column', lineHeight: 1}}>
               <Typography fontWeight={600} variant="subtitle1">Martha Assistant</Typography>
               <RunningClock/>
             </Box>
+=======
+            <Typography fontWeight={600} variant="subtitle1">Martha Assistant</Typography>
+>>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
             <IconButton color="inherit" size="small" onClick={() => setOpen(false)}>
               <CloseIcon />
             </IconButton>

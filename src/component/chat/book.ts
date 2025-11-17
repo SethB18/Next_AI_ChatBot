@@ -1,5 +1,9 @@
 export default async function Book(patient_name:string, doctor_name:string, book_date : string){
     const url = "/api/appointment";
+<<<<<<< HEAD
+=======
+    
+>>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
     const config = {
         method: 'POST',
         headers: {
