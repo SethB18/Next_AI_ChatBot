@@ -60,11 +60,7 @@ export default function ChatHead() {
   const [interactiveOptions, setInteractiveOptions] = useState<string[] | null>(null);
   
   const [chatHistory, setChatHistory] = useState<Message[]>([
-<<<<<<< HEAD
     { role: "assistant", text: "👋 Hello! I am Martha Assistant, how can i help you today?" },
-=======
-    { role: "assistant", text: "👋 Hello! I am Martha, how can i help you today?" },
->>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
   ]);
 
 
@@ -143,17 +139,16 @@ export default function ChatHead() {
     setInteractiveOptions(null);
 
     try {
-
         const systemInstruction: any = { parts: [{ text: instruction }] }; 
         const tools: any = [{ functionDeclarations: [bookAppointmentDeclaration] }];
-
         let API_CONTENTS: any[] = chatHistory
-            .filter(msg => msg.role === 'user' || msg.role === 'assistant')
-            .map(msg => ({
-                role: msg.role === 'assistant' ? 'model' : 'user',
-                parts: [{ text: msg.text }]
-            }));
-        
+          .filter(msg => msg.role === 'user' || msg.role === 'assistant')
+          .map(msg => ({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.text }]
+          }
+        )
+        );
         API_CONTENTS.push({
             role: 'user',
             parts: [{ text: userMessage }]
@@ -181,14 +176,8 @@ export default function ChatHead() {
             const functionCall: any = functionCalls[0];
             const { name, args } = functionCall;
 
-<<<<<<< HEAD
             let functionResult: any;
             
-=======
-            // console.log(`Model requested to call function: ${name}`)
-            let functionResult: any;
-            // Execute the function locally (our booking method)
->>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
             if (name === 'bookAppointment') {
                 let parsedArgs: any = args;
                 if (typeof parsedArgs === 'string') {
@@ -337,19 +326,15 @@ export default function ChatHead() {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              bgcolor: "#2196f3", // primary.main color
+              bgcolor: "#2196f3",  
               color: "white",
               p: 1.5,
             }}
           >
-<<<<<<< HEAD
             <Box sx={{ display: 'flex', flexDirection: 'column', lineHeight: 1}}>
               <Typography fontWeight={600} variant="subtitle1">Martha Assistant</Typography>
               <RunningClock/>
             </Box>
-=======
-            <Typography fontWeight={600} variant="subtitle1">Martha Assistant</Typography>
->>>>>>> b4fb0982dafc20954f4d1e78f984d794be0c7960
             <IconButton color="inherit" size="small" onClick={() => setOpen(false)}>
               <CloseIcon />
             </IconButton>
